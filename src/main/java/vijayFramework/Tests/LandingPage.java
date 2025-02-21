@@ -37,6 +37,9 @@ public class LandingPage extends AbstractComponent {
     public void goTo(){
         driver.get("https://rahulshettyacademy.com/client");
     }
+    public void goToSpecificURL(String url){
+        driver.get(url);
+    }
 
     public String getErrorMessage(){
         waitForElementToAppear(loginErrorToast);
