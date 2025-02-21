@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
+<suite name="All Test Suite" parallel="tests" thread-count="1">
+    <listeners>
+        <listener class-name="vijayFramework.TestComponents.Listeners"></listener>
+    </listeners>
+    <test verbose="2" preserve-order="true" name="ErrorValidationTests">
+        <classes>
+            <class name="vijayFramework.Tests.LoginErrorValidation">
+            <methods>
+                <include name="addProduct"/>
+                <include name="addProductMultipleTestsInSameClass"/>
+            </methods>
+            </class>
+        </classes>
+    </test>
+    <test verbose="2" preserve-order="true" name="E2EValidationTests">
+        <classes>
+            <class name="vijayFramework.Tests.StandAloneTestModified">
+                <methods>
+                    <include name="ZaddProduct"/>
+                    <include name="OrderConfirmation"/>
+                </methods>
+            </class>
+        </classes>
+    </test>
+</suite>

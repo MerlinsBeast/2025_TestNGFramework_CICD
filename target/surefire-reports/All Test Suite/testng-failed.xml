@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE suite SYSTEM "https://testng.org/testng-1.0.dtd">
+<suite thread-count="1" parallel="tests" name="Failed suite [All Test Suite]" guice-stage="DEVELOPMENT" verbose="0">
+  <listeners>
+    <listener class-name="vijayFramework.TestComponents.Listeners"/>
+  </listeners>
+  <test thread-count="1" parallel="tests" name="E2EValidationTests(failed)" verbose="0">
+    <classes>
+      <class name="vijayFramework.Tests.StandAloneTestModified">
+        <methods>
+          <include name="OrderConfirmation"/>
+          <include name="tearDown"/>
+          <include name="launchApplication"/>
+          <include name="ZaddProduct"/>
+        </methods>
+      </class> <!-- vijayFramework.Tests.StandAloneTestModified -->
+    </classes>
+  </test> <!-- E2EValidationTests(failed) -->
+</suite> <!-- Failed suite [All Test Suite] -->
