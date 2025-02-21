@@ -3,6 +3,9 @@ package vijayFramework.TestComponents;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.commons.io.FileUtils;
+import org.apache.poi.ss.usermodel.DataFormatter;
+import org.apache.poi.xssf.usermodel.XSSFSheet;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.openqa.selenium.Dimension;
 import org.openqa.selenium.OutputType;
 import org.openqa.selenium.TakesScreenshot;
@@ -20,6 +23,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.time.Duration;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Properties;
@@ -27,9 +31,11 @@ import java.util.Properties;
 public class BaseTest {
     public WebDriver driver;
     public LandingPage landingPage;
+    DataFormatter formatter= new DataFormatter();
+    Properties prop = new Properties();
     public WebDriver initializeDriver() throws IOException {
 
-        Properties prop = new Properties();
+
         FileInputStream fileInputStream= new FileInputStream(System.getProperty("user.dir")+"/src/main/java/vijayFramework/resources/globalData.properties");
         prop.load(fileInputStream);
         String browserName=System.getProperty("browser")!=null ?System.getProperty("browser"):prop.getProperty("browserName");
@@ -84,5 +90,41 @@ public class BaseTest {
         File file = new File(System.getProperty("user.dir") + "//reports//" + testCaseName + ".png");
         FileUtils.copyFile(source, file);
         return System.getProperty("user.dir") + "//reports//" + testCaseName + ".png";
+    }
+
+
+    public String[][] getDataFromExcel() throws IOException {
+        FileInputStream fileInputStream= new FileInputStream(System.getProperty("user.dir")+"/src/main/java/vijayFramework/resources/globalData.properties");
+        prop.load(fileInputStream);
+        String sheetName=System.getProperty("SheetName")!=null ?System.getProperty("SheetName"):prop.getProperty("SheetName");
+        ArrayList<String> details= new ArrayList<>();
+        String data[][] = new String[0][];
+        FileInputStream file= new FileInputStream(System.getProperty("user.dir")+"/src/main/java/vijayFramework/resources/excelData.xlsx");
+        XSSFWorkbook workbook= new XSSFWorkbook(file);
+        int sheetCount=workbook.getNumberOfSheets();
+        for(int i=0;i<sheetCount;i++) {
+            if (workbook.getSheetName(i).equalsIgnoreCase(sheetName)) {
+                XSSFSheet sheet = workbook.getSheetAt(i);
+                int rowCount=sheet.getLastRowNum();
+                int colCount= sheet.getRow(0).getLastCellNum();
+                System.out.println("Total number of rows is "+ rowCount);
+                data= new String[rowCount][colCount-1];
+                for(int j=1;j<=rowCount;j++){
+                    for(int k=0;k<colCount;k++){
+                        if(k!=0){
+                            String da=formatter.formatCellValue(sheet.getRow(j).getCell(k));
+                            details.add(da);
+                            data[j-1][k-1]= da;
+                            System.out.println((j-1)+" row  "+ (k-1)+" column    " + data[j-1][k-1]);
+                        }
+                    }
+
+                }
+            }
+
+        }
+        System.out.println("data"+ data);
+
+        return data;
     }
 }

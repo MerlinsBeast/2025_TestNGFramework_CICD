@@ -1,10 +1,13 @@
 package vijayFramework.Tests;
 
 import org.testng.Assert;
+import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 import vijayFramework.TestComponents.BaseTest;
 
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.List;
 
 public class LoginErrorValidation extends BaseTest {
     @Test(dependsOnMethods = "addProductMultipleTestsInSameClass" )
@@ -32,6 +35,18 @@ public class LoginErrorValidation extends BaseTest {
         orderConfirmationPage.validateOrderConfirmationMessageDisplayed(expectedMessageToBeDisplayed);
 
 
+    }
+
+    @Test(dataProvider = "getDataThroughExcel")
+    public void addProductExcelErrorValidation(String username, String password) throws IOException {
+        ProductsPage productsPage = landingPage.login(username, password);
+        Assert.assertEquals(landingPage.getErrorMessage(), "Incorrect email or password.");
+    }
+
+    @DataProvider(name="getDataThroughExcel")
+    public String[][] getDataThroughExcel() throws IOException {
+        String [][] dataReceived=getDataFromExcel();
+        return dataReceived;
     }
 
 }
