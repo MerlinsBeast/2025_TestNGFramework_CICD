@@ -24,4 +24,13 @@
             </class>
         </classes>
     </test>
+    <test verbose="2" preserve-order="true" name="UploadDownLoadExcel">
+        <classes>
+            <class name="vijayFramework.Tests.UploadDownloadFeatureTest">
+                <methods>
+                    <include name="checkUploadDownLoadFeature"/>
+                </methods>
+            </class>
+        </classes>
+    </test>
 </suite>

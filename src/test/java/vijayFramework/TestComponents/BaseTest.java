@@ -15,11 +15,13 @@ import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.edge.EdgeDriver;
 import org.openqa.selenium.edge.EdgeOptions;
 import org.testng.annotations.AfterMethod;
+import org.testng.annotations.AfterTest;
 import org.testng.annotations.BeforeMethod;
 import vijayFramework.Tests.LandingPage;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.time.Duration;
@@ -60,6 +62,13 @@ public class BaseTest {
         return driver;
     }
 
+    public LandingPage launchSpecificApplication(String urlName) throws IOException {
+        driver=initializeDriver();
+        landingPage= new LandingPage(driver);
+        landingPage.goToSpecificURL(prop.getProperty(urlName));
+        return landingPage;
+    }
+
     @BeforeMethod
     public LandingPage launchApplication() throws IOException {
         driver=initializeDriver();
@@ -70,6 +79,10 @@ public class BaseTest {
     @AfterMethod
     public void tearDown(){
         driver.close();
+    }
+
+    @AfterTest
+    public void tearDownRemainingInstance(){
         driver.quit();
     }
 
@@ -127,4 +140,41 @@ public class BaseTest {
 
         return data;
     }
+    public ArrayList<String> editDataForSpecificFieldInExcel(String filePath, String testCaseName, int amountToUpdate) throws IOException {
+        ArrayList<String> details= new ArrayList<>();
+        FileInputStream file= new FileInputStream(filePath);
+        XSSFWorkbook workbook= new XSSFWorkbook(file);
+        int sheetCount=workbook.getNumberOfSheets();
+        for(int i=0;i<sheetCount;i++) {
+            if (workbook.getSheetName(i).equalsIgnoreCase(testCaseName)) {
+                XSSFSheet sheet = workbook.getSheetAt(i);
+                int rowCount=sheet.getLastRowNum();
+                int colCount= sheet.getRow(0).getLastCellNum();
+                System.out.println("Total number of rows is "+ rowCount);
+                for(int j=1;j<=rowCount;j++){
+                    for(int k=1;k<colCount;k++){
+                        String expItemName=formatter.formatCellValue(sheet.getRow(j).getCell(k));
+                        if(k==1 && expItemName.equals("Apple")){
+                            // excel write code should go here
+                            sheet.getRow(j).getCell(k+2).setCellValue(amountToUpdate);
+                            FileOutputStream fout= new FileOutputStream("C:/Users/Vijay_Yadav/Downloads/download.xlsx");
+                            workbook.write(fout);
+                            String da=formatter.formatCellValue(sheet.getRow(j).getCell(k+2));
+                            details.add(da);
+                            workbook.close();
+                            break;
+                        }
+                        else {
+
+                        }
+                    }
+
+                }
+            }
+
+        }
+        System.out.println(details);
+        return details;
+    }
+
 }
