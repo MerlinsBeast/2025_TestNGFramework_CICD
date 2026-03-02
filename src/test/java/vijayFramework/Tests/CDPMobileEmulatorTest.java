@@ -9,6 +9,9 @@ import org.openqa.selenium.devtools.v132.network.Network;
 import org.openqa.selenium.devtools.v132.network.model.Request;
 import org.openqa.selenium.devtools.v132.network.model.Response;
 import org.openqa.selenium.devtools.v85.emulation.Emulation;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
+import java.time.Duration;
 import org.testng.annotations.Test;
 
 import java.util.HashMap;
@@ -21,7 +24,7 @@ import static org.openqa.selenium.devtools.v132.network.Network.responseReceived
 public class CDPMobileEmulatorTest {
 
     @Test
-    public void SetDeviceMetricsToMobileView() throws InterruptedException {
+    public void SetDeviceMetricsToMobileView() {
         ChromeDriver driver= new ChromeDriver();
         driver.manage().window().maximize();
         Map deviceMetrics= new HashMap();
@@ -38,7 +41,9 @@ public class CDPMobileEmulatorTest {
 
         driver.get("https://www.rahulshettyacademy.com/angularAppdemo/");
         driver.findElement(By.cssSelector(".navbar-toggler")).click();
-        Thread.sleep(3000);
+        // wait until the Library link is clickable rather than sleeping
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(5));
+        wait.until(ExpectedConditions.elementToBeClickable(By.linkText("Library")));
         driver.findElement(By.linkText("Library")).click();
 
 
@@ -46,7 +51,7 @@ public class CDPMobileEmulatorTest {
     }
 
     @Test(enabled = true)
-    public void checkNetworkValidation() throws InterruptedException {
+    public void checkNetworkValidation() {
         // not executing this method as chrome is asking for is Human validation which is impossible for us to bypass through automation
         ChromeDriver driver= new ChromeDriver();
         driver.manage().window().maximize();

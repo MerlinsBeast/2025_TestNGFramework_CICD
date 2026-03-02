@@ -39,9 +39,10 @@ WebElement downloadButton;
         uploadButton.sendKeys(filepath);
     }
 
-    public void downLoadExcelFile() throws InterruptedException {
+    public void downLoadExcelFile() {
         downloadButton.click();
-        Thread.sleep(4000);
+        // wait for the button to be clickable again (ensures download triggered)
+        waitForElementToBeClickable(downloadButton);
     }
 
     public void verifyToastMessageAvailabilityAndMessage(String expMessage) {

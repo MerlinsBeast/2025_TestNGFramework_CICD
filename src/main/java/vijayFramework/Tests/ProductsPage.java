@@ -34,7 +34,10 @@ public class ProductsPage extends AbstractComponent {
             WebElement orderMenu;
 
         By product= By.cssSelector("[routerlink*='cart']");
-    By addToCartButton= By.xpath("//parent::h5//parent::div//button[contains(text(),' Add To Cart')]");
+    // use a relative XPath; when used via element.findElement the leading dot
+    // ensures the search is scoped inside the product element rather than the
+    // entire document.  Also trim whitespace in the text check.
+    By addToCartButton = By.xpath(".//button[contains(text(),'Add To Cart')]");
     By toastMessageSection= By.xpath("//div[contains(@class,'success ng-animating')]");
 
     public List<WebElement> getProductsList(){
@@ -43,11 +46,29 @@ public class ProductsPage extends AbstractComponent {
     }
 
     public WebElement getProductByName(String productName){
-        return getProductsList().stream().filter(s->s.findElement(By.xpath("//*[contains(@class,'col-lg-4')]//div[@class='card-body']//h5//b")).getText().equalsIgnoreCase(productName)).findFirst().orElse(null);
+        /*
+         * Original locator was absolute and returned the first matching <b> element
+         * on the entire page for every product.  That meant the filter compared the
+         * same text repeatedly and never found a match for products other than the
+         * first one (or returned null).  To fix this we scope the lookup to the
+         * individual `s` element by using a relative XPath (note the leading dot).
+         */
+        return getProductsList().stream()
+                .filter(s -> {
+                    WebElement nameLabel = s.findElement(By.xpath(".//div[@class='card-body']//h5//b"));
+                    return nameLabel.getText().equalsIgnoreCase(productName);
+                })
+                .findFirst()
+                .orElse(null);
     }
 
     public void addProductToCart(String productName){
-        WebElement elementRetrieved=getProductByName(productName);
+        WebElement elementRetrieved = getProductByName(productName);
+        if (elementRetrieved == null) {
+            throw new RuntimeException("Product '" + productName + "' not found on the page");
+        }
+        // addToCartButton is already relative to the product element, but ensure
+        // we use dot syntax when building complex XPath if we ever change it.
         elementRetrieved.findElement(addToCartButton).click();
         waitForElementToAppear(toastMessageSection);
         waitForElementToDisappear(toastSection);
