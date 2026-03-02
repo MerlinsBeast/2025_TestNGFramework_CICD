@@ -33,4 +33,16 @@
             </class>
         </classes>
     </test>
+    <test verbose="2" preserve-order="true" name="RegistrationE2ETests">
+        <classes>
+            <class name="vijayFramework.Tests.RegistrationE2ETests">
+                <methods>
+                    <include name="userRegistration"/>
+                    <include name="userRegistrationAndLoginValidation"/>
+                    <include name="userRegistrationWithPasswordMismatch"/>
+                    <include name="userRegistrationWithMissingFields"/>
+                </methods>
+            </class>
+        </classes>
+    </test>
 </suite>

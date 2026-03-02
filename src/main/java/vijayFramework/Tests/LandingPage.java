@@ -25,6 +25,8 @@ public class LandingPage extends AbstractComponent {
     WebElement loginButton;
     @FindBy(css="[class*=flyInOut]")
     WebElement loginErrorToast;
+    @FindBy(xpath = "//a[contains(text(),'Register here')]")
+    WebElement registerButton;
 
 
     public ProductsPage login(String username, String password){
@@ -44,5 +46,10 @@ public class LandingPage extends AbstractComponent {
     public String getErrorMessage(){
         waitForElementToAppear(loginErrorToast);
         return loginErrorToast.getText();
+    }
+
+    public RegistrationPage clickOnRegisterButton(){
+        registerButton.click();
+        return new RegistrationPage(driver);
     }
 }
